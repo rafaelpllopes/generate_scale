@@ -12,10 +12,4 @@ describe('Testando a API', function() {
         result = await app.inject('/');
         assert.deepEqual(result.statusCode, 200);
     });
-
-    it('Verica JSON de resposta', async () => {
-        result = await app.inject('/');
-        result = JSON.parse(result.payload)
-        assert.deepEqual(result.status, 'Servidor rodando');
-    });
 });

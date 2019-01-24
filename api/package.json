@@ -4,7 +4,7 @@
   "description": "Gerador de Escalas",
   "main": "server.js",
   "scripts": {
-    "test": "node_modules/mocha/bin/mocha -w tests/*.test.js"
+    "test": "node_modules/mocha/bin/mocha tests/*.test.js"
   },
   "keywords": [
     "escala"
@@ -12,7 +12,10 @@
   "author": "Rafael Pereira de Lacerda Lopes",
   "license": "ISC",
   "dependencies": {
-    "hapi": "^18.0.0"
+    "hapi": "^18.0.0",
+    "joi": "^14.3.1",
+    "sha256": "^0.2.0",
+    "sqlite3": "^4.0.6"
   },
   "devDependencies": {
     "mocha": "^5.2.0"

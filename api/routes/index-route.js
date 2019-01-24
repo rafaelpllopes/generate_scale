@@ -1,4 +1,4 @@
-const BaseRoute = require('./baseRoute');
+const BaseRoute = require('./base-route');
 
 class IndexRoute extends BaseRoute {
     constructor() {

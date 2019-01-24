@@ -1,4 +1,5 @@
-const IndexRoute = require('./routes/indexRoute');
+const IndexRoute = require('./routes/index-route');
+const UsuariosRoute = require('./routes/usuarios-route');
 const Hapi = require('hapi');
 const server = Hapi.server({
     port: 8000
@@ -8,7 +9,8 @@ function mapRoutes(instance, methods) {
     return methods.map(method => instance[method]())
 }
 server.route([
-    ...mapRoutes(new IndexRoute(), IndexRoute.methods())
+    ...mapRoutes(new IndexRoute(), IndexRoute.methods()),
+    ...mapRoutes(new UsuariosRoute(), UsuariosRoute.methods())
 ]);
 
 const main =  async function() {
