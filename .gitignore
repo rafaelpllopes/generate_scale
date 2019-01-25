@@ -61,6 +61,4 @@ typings/
 .next
 
 #DB Sqlite3
-scaleDB.db
-scaleDBtest.db
-scaleDBdevelopment.db
+scaleDB*

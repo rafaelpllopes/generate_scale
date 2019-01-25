@@ -28,7 +28,11 @@ const PROFISSIONAL_SCHEMA = `
 CREATE TABLE IF NOT EXISTS profissionais (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     nome VARCHAR(100) NOT NULL,
-    conselho VARCHAR(30)
+    conselho VARCHAR(30),
+    funcao VARCHAR(30),
+    especialidade VARCHAR(30),
+    telefone VARCHAR(11),
+    email VARCHAR(50)
 )`;
 
 const UNIDADES_SCHEMA = `
@@ -52,8 +56,7 @@ CREATE TABLE IF NOT EXISTS escalas (
     turno VARCHAR(50),
     descricao VARCHAR(100),
     profissional_id INTEGER,
-    unidade_id INTEGER,
-    FOREIGN KEY(profissional_id) REFERENCES profissionais(profissional_id)
+    unidade_id INTEGER
 )`;
 
 db.serialize(() => {

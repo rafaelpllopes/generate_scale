@@ -27,6 +27,29 @@ describe('Testando rota /usuarios', function () {
         //app.stop();
     });
 
+    it('/usuarios - POST cadastrar um usuario', async () => {
+        const payload = JSON.stringify({ usuario: `teste${new Date().toTimeString()}`, senha: 'testeteste', nome: 'Teste' });
+
+        let { result } = await app.inject({
+            method: 'POST',
+            url: '/usuarios',
+            payload
+        });
+        postId = result.id;
+        assert.deepEqual(result.message, 'Usuario cadastro com sucesso');
+    });
+
+    it('/usuarios - POST erro no cadastro', async () => {
+        const payload = JSON.stringify({ usuario: `admin`, senha: 'testeteste', nome: 'Teste' });
+
+        let { result } = await app.inject({
+            method: 'POST',
+            url: '/usuarios',
+            payload
+        });
+        assert.deepEqual(result, 'Não foi possivel cadastrar o usuario');
+    });
+
     it('/usuarios - GET rota esta ativa', async () => {
         let result = await app.inject({
             method: 'GET',
@@ -51,29 +74,6 @@ describe('Testando rota /usuarios', function () {
         });
         delete result.id;
         assert.deepEqual(result, { usuario: 'teste', nome: 'TESTE' });
-    });
-
-    it('/usuarios - POST cadastrar um usuario', async () => {
-        const payload = JSON.stringify({ usuario: `teste${new Date().toTimeString()}`, senha: 'testeteste', nome: 'Teste' });
-
-        let { result } = await app.inject({
-            method: 'POST',
-            url: '/usuarios',
-            payload
-        });
-        postId = result.id;
-        assert.deepEqual(result.message, 'Usuario cadastro com sucesso');
-    });
-
-    it('/usuarios - POST erro no cadastro', async () => {
-        const payload = JSON.stringify({ usuario: `admin`, senha: 'testeteste', nome: 'Teste' });
-
-        let { result } = await app.inject({
-            method: 'POST',
-            url: '/usuarios',
-            payload
-        });
-        assert.deepEqual(result, 'Não foi possivel cadastrar o usuario');
     });
 
     it('/usuarios/id - PATCH atualizar o nome de um usuario', async () => {
