@@ -116,6 +116,29 @@ class UsuarioRoute extends BaseRoute {
             }
         };
     }
+
+    login() {
+        return {
+            path: '/usuarios/login',
+            method: 'POST',
+            config: {
+                validate: {
+                    payload: {
+                        usuario: Joi.string().required(),
+                        senha: Joi.string().required()
+                    }
+                }
+            },
+            handler: async (request, headers) => {
+                try {
+                    const { usuario, senha } = request.payload;
+                    return await this._usuarioDao.login(usuario, senha);
+                } catch (error) {
+                    return error.message;
+                }
+            }
+        };
+    }
 }
 
 module.exports = UsuarioRoute;

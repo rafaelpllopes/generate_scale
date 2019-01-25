@@ -1,5 +1,6 @@
 const assert = require('assert');
 const server = require('../server');
+const sha256 = require('sha256');
 let app;
 let lastId;
 let postId;
@@ -23,6 +24,7 @@ describe('Testando rota /usuarios', function () {
             method: 'DELETE',
             url: `/usuarios/${postId}`
         });
+        //app.stop();
     });
 
     it('/usuarios - GET rota esta ativa', async () => {
@@ -38,6 +40,7 @@ describe('Testando rota /usuarios', function () {
             method: 'GET',
             url: '/usuarios'
         });
+        delete result[0].id;
         assert.deepEqual(result[0], { usuario: 'admin', nome: 'Administrador' });
     });
 
@@ -46,8 +49,8 @@ describe('Testando rota /usuarios', function () {
             method: 'GET',
             url: `/usuarios/${lastId}`
         });
-
-        assert.deepEqual(result[0], { usuario: 'teste', nome: 'TESTE' });
+        delete result.id;
+        assert.deepEqual(result, { usuario: 'teste', nome: 'TESTE' });
     });
 
     it('/usuarios - POST cadastrar um usuario', async () => {
@@ -148,5 +151,25 @@ describe('Testando rota /usuarios', function () {
             url: `/usuarios/1`
         });
         assert.deepEqual(result, 'Usuario admin não pode ser removido');
+    });
+
+    it('/usuarios/login - POST realizar um login', async () => {
+        const payload = JSON.stringify({ usuario: 'admin', senha: sha256('admin') });
+        let { result } = await app.inject({
+            method: 'POST',
+            url: `/usuarios/login`,
+            payload
+        });
+        assert.deepEqual(result, { id: 1, nome: 'Administrador', usuario: 'admin' });
+    });
+
+    it('/usuarios/login - POST realizar um login invalido', async () => {
+        const payload = JSON.stringify({ usuario: 'admin', senha: sha256('12345678') });
+        let { result } = await app.inject({
+            method: 'POST',
+            url: `/usuarios/login`,
+            payload
+        });
+        assert.deepEqual(result, 'Usuario ou senha invalido');
     });
 });

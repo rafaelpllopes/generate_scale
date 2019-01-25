@@ -1,30 +1,32 @@
 const db = require('../libs/database');
+const sha256 = require('sha256');
 
 class UsuarioDao {
+
     listar() {
         return new Promise((resolve, reject) => {
-            db.all('SELECT usuario, nome FROM usuarios ORDER BY nome',
+            db.all('SELECT id, usuario, nome FROM usuarios ORDER BY nome',
                 (error, rows) => {
                     if (error) {
                         console.error(`Erros: ${error}`);
                         reject('Não foi possivel obter os usuarios');
                         return;
                     }
-                    rows ? resolve(rows) : resolve();
+                    rows ? resolve(rows) : reject({ message: 'Não ha dados encontrados' });
                 })
         });
     }
 
     buscaPorId(id) {
         return new Promise((resolve, reject) => {
-            db.all('SELECT usuario, nome FROM usuarios WHERE id = ?',
+            db.get('SELECT id, usuario, nome FROM usuarios WHERE id = ?',
                 [id],
                 (error, rows) => {
                     if (error) {
                         reject({ message: 'Não foi possivel obter os usuarios' });
                         return;
                     }
-                    rows ? resolve(rows) : resolve();
+                    rows ? resolve(rows) : reject({ message: 'Não ha dados encontrados' });
                 })
         });
     }
@@ -37,14 +39,14 @@ class UsuarioDao {
                 [
                     usuario.usuario,
                     usuario.nome,
-                    usuario.senha
+                    sha256.x2(usuario.senha)
                 ],
                 function (error, rows) {
                     if (error) {
                         reject({ message: 'Não foi possivel cadastrar o usuario' });
                         return;
                     }
-                    resolve({ message:'Usuario cadastro com sucesso', id: this.lastID });
+                    resolve({ message: 'Usuario cadastro com sucesso', id: this.lastID });
                 });
         });
     }
@@ -61,7 +63,7 @@ class UsuarioDao {
 
             if (senha) {
                 set += 'senha = ?';
-                parametros.push(senha);
+                parametros.push(sha256.x2(senha));
             }
 
             parametros.push(id);
@@ -83,7 +85,7 @@ class UsuarioDao {
 
     delete(id) {
         return new Promise((resolve, reject) => {
-            if(id === '1') {
+            if (id === '1') {
                 reject({ message: 'Usuario admin não pode ser removido' });
                 return;
             }
@@ -96,6 +98,24 @@ class UsuarioDao {
                         return;
                     }
                     resolve({ message: 'Usuario deletado com sucesso' });
+                });
+        });
+    }
+
+    login(usuario, senha) {
+        const password = sha256.x2(senha);
+        return new Promise((resolve, reject) => {
+            db.get('SELECT id, nome, usuario FROM usuarios WHERE usuario = ? AND senha = ?',
+                [
+                    usuario,
+                    password
+                ],
+                async (error, rows) => {
+                    if (error) {
+                        reject({ message: 'Não foi possivel fazer o login' });
+                        return;
+                    }
+                    rows ? resolve(rows) : reject({ message: 'Usuario ou senha invalido' });
                 });
         });
     }

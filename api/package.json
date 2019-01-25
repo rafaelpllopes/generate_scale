@@ -4,7 +4,9 @@
   "description": "Gerador de Escalas",
   "main": "server.js",
   "scripts": {
-    "test": "node_modules/mocha/bin/mocha tests/*.test.js"
+    "start": "NODE_ENV=production node server.js",
+    "test": "NODE_ENV=tests node_modules/mocha/bin/mocha tests/*.test.js",
+    "dev": "NODE_ENV=development nodemon server.js"    
   },
   "keywords": [
     "escala"

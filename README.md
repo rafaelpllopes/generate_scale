@@ -5,3 +5,4 @@ Sistema para gravar escala.
 - nodejs
 - hapi.js
 - mocha.js 
+- joi.js
