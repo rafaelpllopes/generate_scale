@@ -24,7 +24,7 @@ describe('Testando rota /usuarios', function () {
             method: 'DELETE',
             url: `/usuarios/${postId}`
         });
-        //app.stop();
+        app.stop();
     });
 
     it('/usuarios - POST cadastrar um usuario', async () => {
