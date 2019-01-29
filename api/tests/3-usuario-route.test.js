@@ -5,7 +5,7 @@ let app;
 let lastId;
 let postId;
 const headers = {
-    Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibm9tZSI6IkFkbWluaXN0cmFkb3IiLCJ1c3VhcmlvIjoiYWRtaW4iLCJpYXQiOjE1NDg3MjI0MTJ9.cMSbXpisp5mf6hDzGxwgqFPi0h2YmmnwmbmR4QaT6rU' 
+    Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibm9tZSI6IkFkbWluaXN0cmFkb3IiLCJ1c3VhcmlvIjoiYWRtaW4iLCJpYXQiOjE1NDg4MDQ1Njh9.2Ljz_qKcrDsSiSSteW2cKy4Mnv0SYeSfBfUlgJLzF9A' 
 };
 
 describe('Testando rota /usuarios', function () {

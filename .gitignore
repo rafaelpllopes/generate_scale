@@ -62,3 +62,6 @@ typings/
 
 #DB Sqlite3
 scaleDB*
+
+#jwtsecret
+jwtsecret.json
