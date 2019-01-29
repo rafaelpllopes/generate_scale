@@ -3,6 +3,7 @@ const UsuariosRoute = require('./routes/usuarios-route');
 const ProfissionaisRoute = require('./routes/profissionais-route');
 const UnidadesRoute = require('./routes/unidades-route');
 const AuthRoute = require('./routes/auth-route');
+const EscalasRoute = require('./routes/escalas-route');
 const Hapi = require('hapi');
 const HapiJwt = require('hapi-auth-jwt2');
 const server = Hapi.server({
@@ -20,7 +21,8 @@ server.route([
     ...mapRoutes(new AuthRoute(secret), AuthRoute.methods()),
     ...mapRoutes(new UsuariosRoute(), UsuariosRoute.methods()),
     ...mapRoutes(new ProfissionaisRoute(), ProfissionaisRoute.methods()),
-    ...mapRoutes(new UnidadesRoute(), UnidadesRoute.methods())
+    ...mapRoutes(new UnidadesRoute(), UnidadesRoute.methods()),
+    ...mapRoutes(new EscalasRoute(), EscalasRoute.methods())
 ]);
 
 const main =  async function() {

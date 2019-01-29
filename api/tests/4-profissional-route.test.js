@@ -53,7 +53,7 @@ describe('Testando rota /profissionais', function () {
             url: '/profissionais',
             payload
         });
-        assert.deepEqual(result.message, 'Invalid request payload input');
+        assert.deepEqual(result.message, 'child "nome" fails because ["nome" is required]');
     });
 
     it('/profissionais - GET rota esta ativa', async () => {
@@ -91,6 +91,16 @@ describe('Testando rota /profissionais', function () {
         assert.deepEqual(result, { nome: 'teste', conselho: 'teste', funcao: 'teste', especialidade: 'teste', telefone: '00 0000 0000', email: 'teste@teste' });
     });
 
+    it('/profissionais/id - GET Erro na busca do usuario por ID requisição sem o ID', async () => {
+        let { result } = await app.inject({
+            method: 'GET',
+            headers,
+            url: `/profissionais/eee`
+        });
+        delete result.id;
+        assert.deepEqual(result.message, 'child "id" fails because ["id" must be a number]');
+    });
+
     it('/profissionais/id - PUT atualizar o profissional', async () => {
         const payload = JSON.stringify({
             nome: 'teste-novo', 
@@ -121,11 +131,18 @@ describe('Testando rota /profissionais', function () {
             payload
         });
 
-        assert.deepEqual(result.message, 'Invalid request payload input');
+        assert.deepEqual(result.message, 'child "nome" fails because ["nome" is required]');
     });
 
     it('/profissionais/id - PUT id invalido', async () => {
-        const payload = JSON.stringify({});
+        const payload = JSON.stringify({
+            nome: 'teste-novo', 
+            conselho: 'teste-novo', 
+            funcao: 'teste-novo', 
+            especialidade: 'teste-novo', 
+            telefone: '00 0000 0000', 
+            email: 'teste-novo@teste-novo'
+        });
 
         let { result } = await app.inject({
             method: 'PUT',
@@ -134,7 +151,7 @@ describe('Testando rota /profissionais', function () {
             payload
         });
 
-        assert.deepEqual(result.message, 'Invalid request payload input');
+        assert.deepEqual(result.message, 'child "id" fails because ["id" must be a number]');
     });
 
     it('/profissionais/id - DELETE deletar um profissional', async () => {

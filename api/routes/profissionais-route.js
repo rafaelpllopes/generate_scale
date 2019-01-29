@@ -2,6 +2,10 @@ const ProfissionalDao = require('../models/profissional-dao');
 const BaseRoute = require('./base-route');
 const Joi = require('joi');
 
+const failAction = (request, hearders, erro) => {
+    throw erro;
+}
+
 class ProfissionaisRoute extends BaseRoute {
     constructor() {
         super();
@@ -28,8 +32,9 @@ class ProfissionaisRoute extends BaseRoute {
             method: 'GET',
             config: {
                 validate: {
+                    failAction,
                     params: {
-                        id: Joi.string().required()
+                        id: Joi.number().required()
                     }
                 }
             },
@@ -50,6 +55,7 @@ class ProfissionaisRoute extends BaseRoute {
             method: 'POST',
             config: {
                 validate: {
+                    failAction,
                     payload: {
                         nome: Joi.string().min(3).required(),
                         conselho: Joi.string(),
@@ -77,8 +83,9 @@ class ProfissionaisRoute extends BaseRoute {
             method: 'PUT',
             config: {
                 validate: {
+                    failAction,
                     params: {
-                        id: Joi.string().required()
+                        id: Joi.number().required()
                     },
                     payload: {
                         nome: Joi.string().min(3).required(),
@@ -108,6 +115,7 @@ class ProfissionaisRoute extends BaseRoute {
             method: 'DELETE',
             config: {
                 validate: {
+                    failAction,
                     params: {
                         id: Joi.string().required()
                     }

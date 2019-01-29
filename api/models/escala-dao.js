@@ -31,7 +31,7 @@ class EscalaslDao {
                     escala.unidade_id
                 ],
                 function (error, rows) {
-                    if(error) {
+                    if (error) {
                         console.error(`Erros: ${error}`);
                         reject('Não foi possivel cadastrar a escala');
                     }
@@ -50,7 +50,7 @@ class EscalaslDao {
                 ORDER BY data`,
                 [profissional],
                 (error, rows) => {
-                    if(error) {
+                    if (error) {
                         console.error(`Erros: ${error}`);
                         reject('Não foi possivel obter as escalas');
                     }
@@ -69,7 +69,7 @@ class EscalaslDao {
                 ORDER BY data`,
                 [unidade],
                 (error, rows) => {
-                    if(error) {
+                    if (error) {
                         console.error(`Erros: ${error}`);
                         reject('Não foi possivel obter as escalas');
                     }
@@ -77,7 +77,48 @@ class EscalaslDao {
                 });
         });
     }
-    
+
+    update(id, escala) {
+        return new Promise((resolve, reject) => {
+            this._db.run(`UPDATE escalas SET
+                data = ?,
+                turno = ?,
+                descricao = ?,
+                profissional_id = ?,
+                unidade_id = ?
+                WHERE id = ?
+            `,
+                [
+                    escala.data,
+                    escala.turno,
+                    escala.descricao,
+                    escala.profissional_id,
+                    escala.unidade_id,
+                    id
+                ],
+                function (error, rows) {
+                    if (error) {
+                        console.error(`Erros: ${error}`);
+                        reject('Não foi possivel atualizar a escala');
+                    }
+                    resolve({ message: 'Escala atualizada com sucesso' });
+                });
+        });
+    }
+
+    delete(id) {
+        return new Promise((resolve, reject) => {
+            db.run('DELETE FROM escalas WHERE id = ?',
+                [id],
+                (error, rows) => {
+                    if (error) {
+                        reject({ message: 'Não foi possivel deletar a escala' });
+                        return;
+                    }
+                    resolve({ message: 'Escala deletado com sucesso' });
+                });
+        });
+    }
 }
 
 module.exports = EscalaslDao;
