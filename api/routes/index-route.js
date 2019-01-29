@@ -9,6 +9,9 @@ class IndexRoute extends BaseRoute {
         return {
             path: '/',
             method: 'GET',
+            config: {
+                auth: false
+            },
             handler: (request, headers) => { 
                 return {status: 'Servidor rodando'} 
             }

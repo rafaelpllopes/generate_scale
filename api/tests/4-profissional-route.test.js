@@ -3,6 +3,9 @@ const server = require('../server');
 let app;
 let lastId;
 let postId;
+const headers = {
+    Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibm9tZSI6IkFkbWluaXN0cmFkb3IiLCJ1c3VhcmlvIjoiYWRtaW4iLCJpYXQiOjE1NDg3MjI0MTJ9.cMSbXpisp5mf6hDzGxwgqFPi0h2YmmnwmbmR4QaT6rU' 
+};
 
 describe('Testando rota /profissionais', function () {
     this.beforeAll(async () => {
@@ -11,16 +14,18 @@ describe('Testando rota /profissionais', function () {
 
         const { result } = await app.inject({
             method: 'POST',
+            headers,
             url: '/profissionais',
             payload
         });
 
-        lastId = result.id
+        lastId = result.id;
     });
 
     this.afterAll(async () => {
         await app.inject({
             method: 'DELETE',
+            headers,
             url: `/profissionais/${postId}`
         });
         app.stop();
@@ -31,6 +36,7 @@ describe('Testando rota /profissionais', function () {
 
         let { result } = await app.inject({
             method: 'POST',
+            headers,
             url: '/profissionais',
             payload
         });
@@ -43,6 +49,7 @@ describe('Testando rota /profissionais', function () {
 
         let { result } = await app.inject({
             method: 'POST',
+            headers,
             url: '/profissionais',
             payload
         });
@@ -52,6 +59,7 @@ describe('Testando rota /profissionais', function () {
     it('/profissionais - GET rota esta ativa', async () => {
         let result = await app.inject({
             method: 'GET',
+            headers,
             url: '/profissionais'
         });
         assert.deepEqual(result.statusCode, 200);
@@ -60,6 +68,7 @@ describe('Testando rota /profissionais', function () {
     it('/profissionais - GET listar os profissionais', async () => {
         const { result } = await app.inject({
             method: 'GET',
+            headers,
             url: '/profissionais'
         });
         delete result[0].id;
@@ -75,6 +84,7 @@ describe('Testando rota /profissionais', function () {
     it('/profissionais/id - GET buscar usuario por ID', async () => {
         let { result } = await app.inject({
             method: 'GET',
+            headers,
             url: `/profissionais/${lastId}`
         });
         delete result.id;
@@ -93,6 +103,7 @@ describe('Testando rota /profissionais', function () {
 
         let { result } = await app.inject({
             method: 'PUT',
+            headers,
             url: `/profissionais/${postId}`,
             payload
         });
@@ -105,6 +116,7 @@ describe('Testando rota /profissionais', function () {
 
         let { result } = await app.inject({
             method: 'PUT',
+            headers,
             url: `/profissionais/${postId}`,
             payload
         });
@@ -117,6 +129,7 @@ describe('Testando rota /profissionais', function () {
 
         let { result } = await app.inject({
             method: 'PUT',
+            headers,
             url: `/profissionais/a`,
             payload
         });
@@ -127,6 +140,7 @@ describe('Testando rota /profissionais', function () {
     it('/profissionais/id - DELETE deletar um profissional', async () => {
         let { result } = await app.inject({
             method: 'DELETE',
+            headers,
             url: `/profissionais/${lastId}`
         });
         assert.deepEqual(result.message, 'Profissional deletado com sucesso');

@@ -2,6 +2,10 @@ const UsuarioDao = require('../models/usuario-dao');
 const BaseRoute = require('./base-route');
 const Joi = require('joi');
 
+const failAction = (request, hearders, erro) => {
+    throw erro;
+}
+
 class UsuarioRoute extends BaseRoute {
     constructor() {
         super();
@@ -28,6 +32,7 @@ class UsuarioRoute extends BaseRoute {
             method: 'GET',
             config: {
                 validate: {
+                    failAction,
                     params: {
                         id: Joi.string().required()
                     }
@@ -50,9 +55,10 @@ class UsuarioRoute extends BaseRoute {
             method: 'POST',
             config: {
                 validate: {
+                    failAction,
                     payload: {
                         usuario: Joi.string().min(3).required(),
-                        senha: Joi.string().min(8).max(50).required(),
+                        senha: Joi.string().min(8).max(300).required(),
                         nome: Joi.string().min(3).max(250).required()
                     }
                 }
@@ -74,6 +80,7 @@ class UsuarioRoute extends BaseRoute {
             method: 'PATCH',
             config: {
                 validate: {
+                    failAction,
                     params: {
                         id: Joi.string().required()
                     },
@@ -101,6 +108,7 @@ class UsuarioRoute extends BaseRoute {
             method: 'DELETE',
             config: {
                 validate: {
+                    failAction,
                     params: {
                         id: Joi.string().required()
                     }
@@ -110,29 +118,6 @@ class UsuarioRoute extends BaseRoute {
                 try {
                     const { id } = request.params;
                     return await this._usuarioDao.delete(id);
-                } catch (error) {
-                    return error.message;
-                }
-            }
-        };
-    }
-
-    login() {
-        return {
-            path: '/usuarios/login',
-            method: 'POST',
-            config: {
-                validate: {
-                    payload: {
-                        usuario: Joi.string().required(),
-                        senha: Joi.string().required()
-                    }
-                }
-            },
-            handler: async (request, headers) => {
-                try {
-                    const { usuario, senha } = request.payload;
-                    return await this._usuarioDao.login(usuario, senha);
                 } catch (error) {
                     return error.message;
                 }

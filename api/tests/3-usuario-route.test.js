@@ -4,34 +4,39 @@ const sha256 = require('sha256');
 let app;
 let lastId;
 let postId;
+const headers = {
+    Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibm9tZSI6IkFkbWluaXN0cmFkb3IiLCJ1c3VhcmlvIjoiYWRtaW4iLCJpYXQiOjE1NDg3MjI0MTJ9.cMSbXpisp5mf6hDzGxwgqFPi0h2YmmnwmbmR4QaT6rU' 
+};
 
 describe('Testando rota /usuarios', function () {
     this.beforeAll(async () => {
-        const payload = JSON.stringify({ usuario: 'teste', nome: 'TESTE', senha: 'scaleteste' });
         app = await server;
+        const payload = JSON.stringify({ usuario: 'teste', senha: sha256('testeteste'), nome: 'TESTE' });
 
-        const { result } = await app.inject({
+        let { result } = await app.inject({
             method: 'POST',
+            headers,
             url: '/usuarios',
             payload
         });
-
-        lastId = result.id
+        lastId = result.id;
     });
 
     this.afterAll(async () => {
         await app.inject({
             method: 'DELETE',
+            headers,
             url: `/usuarios/${postId}`
         });
         app.stop();
     });
 
     it('/usuarios - POST cadastrar um usuario', async () => {
-        const payload = JSON.stringify({ usuario: `teste${new Date().toTimeString()}`, senha: 'testeteste', nome: 'Teste' });
+        const payload = JSON.stringify({ usuario: `teste${new Date().toTimeString()}`, senha: sha256('testeteste'), nome: 'Teste' });
 
         let { result } = await app.inject({
             method: 'POST',
+            headers,
             url: '/usuarios',
             payload
         });
@@ -40,10 +45,11 @@ describe('Testando rota /usuarios', function () {
     });
 
     it('/usuarios - POST erro no cadastro', async () => {
-        const payload = JSON.stringify({ usuario: `admin`, senha: 'testeteste', nome: 'Teste' });
+        const payload = JSON.stringify({ usuario: `admin`, senha: sha256('testeteste'), nome: 'Teste' });
 
         let { result } = await app.inject({
             method: 'POST',
+            headers,
             url: '/usuarios',
             payload
         });
@@ -53,6 +59,7 @@ describe('Testando rota /usuarios', function () {
     it('/usuarios - GET rota esta ativa', async () => {
         let result = await app.inject({
             method: 'GET',
+            headers,
             url: '/usuarios'
         });
         assert.deepEqual(result.statusCode, 200);
@@ -61,6 +68,7 @@ describe('Testando rota /usuarios', function () {
     it('/usuarios - GET listar os usuarios', async () => {
         const { result } = await app.inject({
             method: 'GET',
+            headers,
             url: '/usuarios'
         });
         delete result[0].id;
@@ -70,6 +78,7 @@ describe('Testando rota /usuarios', function () {
     it('/usuarios/id - GET buscar usuario por ID', async () => {
         let { result } = await app.inject({
             method: 'GET',
+            headers,
             url: `/usuarios/${lastId}`
         });
         delete result.id;
@@ -81,6 +90,7 @@ describe('Testando rota /usuarios', function () {
 
         let { result } = await app.inject({
             method: 'PATCH',
+            headers,
             url: `/usuarios/${lastId}`,
             payload
         });
@@ -93,6 +103,7 @@ describe('Testando rota /usuarios', function () {
 
         let { result } = await app.inject({
             method: 'PATCH',
+            headers,
             url: `/usuarios/${lastId}`,
             payload
         });
@@ -105,6 +116,7 @@ describe('Testando rota /usuarios', function () {
 
         let { result } = await app.inject({
             method: 'PATCH',
+            headers,
             url: `/usuarios/${lastId}`,
             payload
         });
@@ -117,6 +129,7 @@ describe('Testando rota /usuarios', function () {
 
         let { result } = await app.inject({
             method: 'PATCH',
+            headers,
             url: `/usuarios/${lastId}`,
             payload
         });
@@ -129,6 +142,7 @@ describe('Testando rota /usuarios', function () {
 
         let { result } = await app.inject({
             method: 'PATCH',
+            headers,
             url: `/usuarios/a`,
             payload
         });
@@ -139,6 +153,7 @@ describe('Testando rota /usuarios', function () {
     it('/usuarios/id - DELETE deletar um usuario', async () => {
         let { result } = await app.inject({
             method: 'DELETE',
+            headers,
             url: `/usuarios/${lastId}`
         });
 
@@ -148,28 +163,9 @@ describe('Testando rota /usuarios', function () {
     it('/usuarios/id - DELETE não pode deletar o usuario admin', async () => {
         let { result } = await app.inject({
             method: 'DELETE',
+            headers,
             url: `/usuarios/1`
         });
         assert.deepEqual(result, 'Usuario admin não pode ser removido');
-    });
-
-    it('/usuarios/login - POST realizar um login', async () => {
-        const payload = JSON.stringify({ usuario: 'admin', senha: sha256('admin') });
-        let { result } = await app.inject({
-            method: 'POST',
-            url: `/usuarios/login`,
-            payload
-        });
-        assert.deepEqual(result, { id: 1, nome: 'Administrador', usuario: 'admin' });
-    });
-
-    it('/usuarios/login - POST realizar um login invalido', async () => {
-        const payload = JSON.stringify({ usuario: 'admin', senha: sha256('12345678') });
-        let { result } = await app.inject({
-            method: 'POST',
-            url: `/usuarios/login`,
-            payload
-        });
-        assert.deepEqual(result, 'Usuario ou senha invalido');
     });
 });
