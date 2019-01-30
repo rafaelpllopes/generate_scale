@@ -10,7 +10,7 @@ const server = Hapi.server({
     port: 8000
 });
 
-const { secret } = require('./jwtsecret.json') ;;
+const { secret } = require('./jwtsecret.json'); 
 
 function mapRoutes(instance, methods) {
     return methods.map(method => instance[method]())

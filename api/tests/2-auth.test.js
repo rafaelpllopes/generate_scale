@@ -7,6 +7,15 @@ let app;
 describe('Testando auth rote /auth', function () {
     this.beforeAll(async () => {
         app = await server;
+
+        const payload = JSON.stringify({ usuario: 'admin', senha: sha256('admin') });
+        const { result } = await app.inject({
+            method: 'POST',
+            url: `/auth`,
+            payload
+        });
+
+
     });
 
     this.afterAll(async () => {
