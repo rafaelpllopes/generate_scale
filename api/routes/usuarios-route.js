@@ -86,7 +86,7 @@ class UsuarioRoute extends BaseRoute {
                     },
                     payload: {
                         nome: Joi.string().min(3).max(250),
-                        senha: Joi.string().min(8).max(50)
+                        senha: Joi.string().min(8).max(300)
                     }
                 }
             },
